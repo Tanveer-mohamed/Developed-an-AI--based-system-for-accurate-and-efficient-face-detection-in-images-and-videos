@@ -1,0 +1,41 @@
+# Import the OpenCV library
+import cv2
+
+# Define the path to the Haar cascade file for face detection
+alg = "haarcascade_frontalface_default.xml"
+
+# Create a CascadeClassifier object using the Haar cascade file
+haar_cascade = cv2.CascadeClassifier(alg)
+
+# Initialize the webcam (use 0 for the default camera, 1 for an external camera)
+cam = cv2.VideoCapture(1)
+
+# Start an infinite loop to continuously read frames from the webcam
+while True:
+    # Read a frame from the webcam
+    _, img = cam.read()
+    
+    # Convert the frame to grayscale (face detection works better on grayscale images)
+    grayImg = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    
+    # Detect faces in the grayscale image
+    face = haar_cascade.detectMultiScale(grayImg, 1.3, 4)
+    
+    # Loop over the detected faces
+    for (x, y, w, h) in face:
+        # Draw a rectangle around each face (in BGR color format, here it's yellow)
+        cv2.rectangle(img, (x, y), (x+w, y+h), (255, 255, 0), 5)
+    
+    # Display the frame with rectangles around detected faces
+    cv2.imshow("FaceDetection", img)
+    
+    # Wait for a key press for 10 milliseconds
+    key = cv2.waitKey(10)
+    
+    # If the Esc key (ASCII code 27) is pressed, break the loop
+    if key == 27:
+        break
+
+# Release the webcam and close all OpenCV windows
+cam.release()
+cv2.destroyAllWindows()
